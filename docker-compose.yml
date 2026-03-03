@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  wordpress:
+    build: .
+    container_name: wp-imap
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppassword
+      WORDPRESS_DB_NAME: wpdatabase
+    volumes:
+      - wp_data:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.6
+    container_name: wp-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: wpdatabase
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  wp_data:
+  db_data:
